@@ -8,15 +8,18 @@ import static frc.robot.Constants.TurretConstants.RingGearFeedbackConfig;
 import static frc.robot.Constants.TurretConstants.RingGearMotionMagicConfig;
 import static frc.robot.Constants.TurretConstants.PositionRequest;
 import static frc.robot.Constants.TurretConstants.RingGearID;
+import static frc.robot.Constants.TurretConstants.RingGearLimits;
 import static frc.robot.Constants.CANIVORE;
-
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 
 public class TurretRing extends SubsystemBase {
 
   private final TalonFX m_krakenX44 = new TalonFX(RingGearID, CANIVORE);
+  double kP = 0.035;
+  private double m_angle;
 
   public TurretRing() {
     ConfigureMotor();
@@ -26,13 +29,18 @@ public class TurretRing extends SubsystemBase {
     TalonFXConfiguration m_config = new TalonFXConfiguration()
       .withSlot0(Slot0Configs.from(RingGearConfig))
       .withFeedback(RingGearFeedbackConfig)
-      .withMotionMagic(RingGearMotionMagicConfig);
+      .withMotionMagic(RingGearMotionMagicConfig)
+      .withSoftwareLimitSwitch(RingGearLimits);
 
     m_krakenX44.getConfigurator().apply(m_config);
   }
 
   public void v_runTurret(double position) {
     m_krakenX44.setControl(PositionRequest.withPosition(position));
+  }
+
+  public void v_stopMotor() {
+    m_krakenX44.stopMotor();
   }
 
   @Override

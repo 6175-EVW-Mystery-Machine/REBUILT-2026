@@ -18,8 +18,8 @@ public class SnowblowFuel extends SequentialCommandGroup {
         new WaitCommand(0.1),
           new InstantCommand(() -> m_feeder.v_runWheels(576)),
           new WaitCommand(0.1),
-            new InstantCommand(() -> m_turret.v_runWheel(2500)),
-            new WaitCommand(0.1),
+            // new InstantCommand(() -> m_turret.v_runWheel(2500)),
+            // new WaitCommand(0.1),
               new InstantCommand(() -> m_indexer.v_runWheels(720))
     );
   }

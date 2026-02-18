@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Indexer extends SubsystemBase {
 
-  private final SparkFlex m_vortex = new SparkFlex(15, MotorType.kBrushless);
+  private final SparkFlex m_vortex = new SparkFlex(14, MotorType.kBrushless);
   private final SparkFlexConfig m_config = new SparkFlexConfig();
 
   public Indexer() {

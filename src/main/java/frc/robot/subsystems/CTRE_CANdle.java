@@ -26,6 +26,7 @@ import static frc.robot.Constants.CANdle.kRed;
 import static frc.robot.Constants.CANdle.kYellow;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.LimelightHelpers;
 
 public class CTRE_CANdle extends SubsystemBase {
 
@@ -41,11 +42,11 @@ public class CTRE_CANdle extends SubsystemBase {
   }
 
   private void v_stopAll() {
-    m_CANdle.setControl(new EmptyAnimation(0));
-    m_CANdle.setControl(new EmptyAnimation(1));
-    m_CANdle.setControl(new EmptyAnimation(2));
-    m_CANdle.setControl(new EmptyAnimation(3));
-    m_CANdle.setControl(new EmptyAnimation(4));
+    m_CANdle.setControl(new EmptyAnimation(kLeftIntake));
+    m_CANdle.setControl(new EmptyAnimation(kRightIntake));
+    m_CANdle.setControl(new EmptyAnimation(kIndexer));
+    m_CANdle.setControl(new EmptyAnimation(kLeftTurretSupport));
+    m_CANdle.setControl(new EmptyAnimation(kRightTurretSupport));
     m_CANdle.setControl(new EmptyAnimation(5));
     m_CANdle.setControl(new EmptyAnimation(6));
     m_CANdle.setControl(new EmptyAnimation(7));
@@ -77,9 +78,11 @@ public class CTRE_CANdle extends SubsystemBase {
   }
 
   public void v_turretLock() {
+    if (LimelightHelpers.getTV("")) {
     v_stopAll();
-    m_CANdle.setControl(new StrobeAnimation(0, 0).withColor(kCyan).withFrameRate(30).withSlot(kLeftTurretSupport));
-    m_CANdle.setControl(new StrobeAnimation(0, 0).withColor(kCyan).withFrameRate(30).withSlot(kRightTurretSupport));
+    m_CANdle.setControl(new StrobeAnimation(0, 0).withColor(kCyan).withFrameRate(20).withSlot(kLeftTurretSupport));
+    m_CANdle.setControl(new StrobeAnimation(0, 0).withColor(kCyan).withFrameRate(20).withSlot(kRightTurretSupport));
+    }
   }
 
   public void v_snowblowTurret() {
@@ -89,6 +92,20 @@ public class CTRE_CANdle extends SubsystemBase {
     m_CANdle.setControl(new ColorFlowAnimation(0, 0).withColor(kOrange).withFrameRate(120).withSlot(kIndexer));
     m_CANdle.setControl(new FireAnimation(0, 0).withBrightness(0.5).withSparking(0.2).withCooling(0).withSlot(kLeftTurretSupport));
     m_CANdle.setControl(new FireAnimation(0, 0).withBrightness(0.5).withSparking(0.2).withCooling(0).withSlot(kRightTurretSupport));
+  }
+
+  public void v_clearTurretRails() {
+    m_CANdle.setControl(new EmptyAnimation(kLeftTurretSupport));
+    m_CANdle.setControl(new EmptyAnimation(kRightTurretSupport));
+  }
+
+  public void v_clearIntake() {
+    m_CANdle.setControl(new EmptyAnimation(kLeftIntake));
+    m_CANdle.setControl(new EmptyAnimation(kRightIntake));
+  }
+  
+  public void v_clearIndexer() {
+    m_CANdle.setControl(new EmptyAnimation(kIndexer));
   }
 
   @Override

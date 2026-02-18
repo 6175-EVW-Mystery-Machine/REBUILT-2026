@@ -11,8 +11,8 @@ public class StopShooting extends SequentialCommandGroup {
 
   public StopShooting(TurretFlywheel m_flywheel, Feeder m_feeder, Indexer m_indexer, Intake m_intake) {
     addCommands(
-      new InstantCommand(() -> m_flywheel.v_stopMotors())
-        .alongWith(new InstantCommand(() -> m_feeder.v_stopMotor()))
+      // new InstantCommand(() -> m_flywheel.v_stopMotors())
+        new InstantCommand(() -> m_feeder.v_stopMotor())
           .alongWith(new InstantCommand(() -> m_indexer.v_stopMotor()))
             .alongWith(new InstantCommand(() -> m_intake.v_stopMotor()))
     );

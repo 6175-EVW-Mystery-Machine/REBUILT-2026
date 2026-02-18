@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
-  private final SparkMax m_neo2 = new SparkMax(30, MotorType.kBrushless);
+  private final SparkMax m_neo2 = new SparkMax(13, MotorType.kBrushless);
   private final SparkMaxConfig m_config = new SparkMaxConfig();
 
   public Intake() {

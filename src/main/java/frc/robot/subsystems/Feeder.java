@@ -13,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase {
 
-  private final SparkMax m_neo2 = new SparkMax(14, MotorType.kBrushless);
+  private final SparkMax m_neo2 = new SparkMax(15, MotorType.kBrushless);
   private final SparkMaxConfig m_config = new SparkMaxConfig();
 
   public Feeder() {
