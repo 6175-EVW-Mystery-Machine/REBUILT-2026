@@ -13,14 +13,14 @@ public class SnowblowFuel extends SequentialCommandGroup {
 
   public SnowblowFuel(Intake m_intake, CTRE_CANdle m_CANdle, Feeder m_feeder, Indexer m_indexer, TurretFlywheel m_turret) {
     addCommands(
-      new InstantCommand(() -> m_CANdle.v_snowblowTurret())
-        .alongWith(new InstantCommand(() -> m_intake.v_runWheels(360))),
+      // new InstantCommand(() -> m_CANdle.v_snowblowTurret())
+        new InstantCommand(() -> m_intake.v_runWheels(0.45)),
         new WaitCommand(0.1),
-          new InstantCommand(() -> m_feeder.v_runWheels(576)),
+          new InstantCommand(() -> m_feeder.v_runWheels(2200)),
           new WaitCommand(0.1),
             // new InstantCommand(() -> m_turret.v_runWheel(2500)),
             // new WaitCommand(0.1),
-              new InstantCommand(() -> m_indexer.v_runWheels(720))
+              new InstantCommand(() -> m_indexer.v_runWheels(1500))
     );
   }
 }

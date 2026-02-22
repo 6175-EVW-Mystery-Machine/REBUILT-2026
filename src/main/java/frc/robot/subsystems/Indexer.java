@@ -3,6 +3,8 @@ package frc.robot.subsystems;
 import com.revrobotics.PersistMode;
 import com.revrobotics.ResetMode;
 import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkBase.ControlType;
+
 import static com.revrobotics.spark.SparkBase.ControlType.kMAXMotionVelocityControl;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
 import com.revrobotics.spark.config.SparkFlexConfig;
@@ -15,6 +17,7 @@ public class Indexer extends SubsystemBase {
 
   private final SparkFlex m_vortex = new SparkFlex(14, MotorType.kBrushless);
   private final SparkFlexConfig m_config = new SparkFlexConfig();
+  private boolean indexing = false;
 
   public Indexer() {
     m_config
@@ -25,8 +28,8 @@ public class Indexer extends SubsystemBase {
     .pid(0, 0, 0)
     .feedForward.sva(0, 0.12, 0);
     m_config.closedLoop.maxMotion
-    .cruiseVelocity(100)
-    .maxAcceleration(75);
+    .cruiseVelocity(750)
+    .maxAcceleration(600);
 
 
     m_vortex.configure(m_config,
@@ -35,11 +38,13 @@ public class Indexer extends SubsystemBase {
   }
 
   public void v_runWheels(double RPM) {
-    m_vortex.getClosedLoopController().setSetpoint(RPM/12, kMAXMotionVelocityControl);
+    m_vortex.getClosedLoopController().setSetpoint(RPM/66.2, ControlType.kDutyCycle);
+    indexing = true;
   }
 
   public void v_stopMotor() {
     m_vortex.stopMotor();
+    indexing = false;
   }
 
   @Override
@@ -48,5 +53,7 @@ public class Indexer extends SubsystemBase {
     SmartDashboard.putNumber("Indexer Current", Math.round(m_vortex.getOutputCurrent() * 10) / 10);
     SmartDashboard.putNumber("Indexer CAN ID", m_vortex.getDeviceId());
     SmartDashboard.putNumber("Indexer RPM", Math.round(m_vortex.getEncoder().getVelocity() * 10) / 10);
+
+    SmartDashboard.putBoolean("Indexing Fuel?", indexing);
   }
 }

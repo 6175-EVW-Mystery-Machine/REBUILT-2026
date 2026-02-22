@@ -21,6 +21,7 @@ public class TurretFlywheel extends SubsystemBase {
 
   private final TalonFX m_flywheel = new TalonFX(FlywheelLeaderID, CANIVORE);
   private final TalonFX m_flywheelFollower = new TalonFX(FlywheelFollowerID, CANIVORE);
+  private boolean shooting = false;
 
   public TurretFlywheel() {
     ConfigureMotors();
@@ -39,10 +40,12 @@ public class TurretFlywheel extends SubsystemBase {
 
   public void v_runWheel(double RPM) {
     m_flywheel.setControl(VelocityRequest.withVelocity(RPM/60));
+    shooting = true;
   }
 
   public void v_stopMotors() {
     m_flywheel.stopMotor();
+    shooting = false;
   }
 
   @Override
@@ -51,5 +54,7 @@ public class TurretFlywheel extends SubsystemBase {
       SmartDashboard.putNumber("Turret Current", Math.round(m_flywheel.getStatorCurrent().getValueAsDouble() * 10) / 10);
       SmartDashboard.putNumber("Turret ID", m_flywheel.getDeviceID());
       SmartDashboard.putNumber("Turret RPM", Math.round(m_flywheel.getVelocity().getValueAsDouble() * 10) / 10);
+
+      SmartDashboard.putBoolean("Shooting Fuel?", shooting);
   }
 }

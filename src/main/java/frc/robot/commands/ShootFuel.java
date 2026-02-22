@@ -12,9 +12,9 @@ public class ShootFuel extends SequentialCommandGroup {
   public ShootFuel(Indexer m_indexer, Feeder m_feeder, CTRE_CANdle m_CANdle, TurretFlywheel m_flywheel) {
     addCommands(
       // new InstantCommand(() -> m_CANdle.v_turretShoot())
-        new InstantCommand(() -> m_flywheel.v_runWheel(1500)),
-          new InstantCommand(() -> m_feeder.v_runWheels(576)),
-            new InstantCommand(() -> m_indexer.v_runWheels(720))
+        // new InstantCommand(() -> m_flywheel.v_runWheel(1500)),
+          new InstantCommand(() -> m_feeder.v_runWheels(2200)),
+            new InstantCommand(() -> m_indexer.v_runWheels(1500))
     );
   }
 }

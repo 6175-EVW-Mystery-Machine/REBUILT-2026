@@ -4,18 +4,30 @@ import com.ctre.phoenix6.CANBus;
 import com.ctre.phoenix6.CANBus.CANBusStatus;
 import com.ctre.phoenix6.configs.FeedbackConfigs;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
+import com.ctre.phoenix6.configs.MotorOutputConfigs;
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.Slot1Configs;
 import com.ctre.phoenix6.configs.SlotConfigs;
 import com.ctre.phoenix6.configs.SoftwareLimitSwitchConfigs;
 import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
+import com.ctre.phoenix6.controls.PositionVoltage;
+import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.RGBWColor;
 
 import edu.wpi.first.math.Matrix;
 import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
 import static com.ctre.phoenix6.signals.FeedbackSensorSourceValue.FusedCANcoder;
+import static edu.wpi.first.units.Units.Rotations;
 
 public final class Constants{
 
@@ -25,6 +37,8 @@ public final class Constants{
   public static final CANBus CANIVORE = new CANBus("canivore");
   public static final CANBusStatus CANStatus = new CANBusStatus();
 
+
+  public static final Pose2d hubLocation = new Pose2d(4.035, 3.6449, new Rotation2d());
 
   public static class OdometryConstants {
     public static final Matrix<N3, N1> StateSTDDevs = VecBuilder.fill(
@@ -37,7 +51,7 @@ public final class Constants{
     //TURRET FLYWHEEL
     public static int FlywheelLeaderID = 18;
     public static int FlywheelFollowerID = 19; 
-    public static MotionMagicVelocityVoltage VelocityRequest = new MotionMagicVelocityVoltage(0);
+    public static VelocityVoltage VelocityRequest = new VelocityVoltage(0).withEnableFOC(false);
       public static final SlotConfigs FlywheelConfig = new SlotConfigs()
       .withKP(10)
       .withKD(0)
@@ -51,27 +65,36 @@ public final class Constants{
 
     //TURRET GEAR
     public static int RingGearID = 16;
-    public static MotionMagicVoltage PositionRequest = new MotionMagicVoltage(0);
-      public static final SlotConfigs RingGearConfig = new SlotConfigs()
-      .withKP(20)
+    public static PositionVoltage PositionRequest = new PositionVoltage(0).withSlot(1);
+      public static final Slot0Configs RingGear0Config = new Slot0Configs()
+      .withKP(5)
       .withKD(0)
-      .withKS(0.3)
-      .withKV(0.12)
-      .withKA(0.1);
-      public static FeedbackConfigs RingGearFeedbackConfig = new FeedbackConfigs()
-      .withFeedbackRemoteSensorID(17)
+      .withKS(0)
+      .withKV(.12)
+      .withKA(0);
+      public static final Slot1Configs RingGear1Config = new Slot1Configs()
+      .withKP(50)
+      .withKD(0.4)
+      .withKS(0.1)
+      .withKV(1)
+      .withKA(0.05);
+      public static final FeedbackConfigs RingGearFeedbackConfig = new FeedbackConfigs()
       .withFeedbackSensorSource(FusedCANcoder)
-      .withRotorToSensorRatio(4)
-      .withSensorToMechanismRatio(4);
-      public static MotionMagicConfigs RingGearMotionMagicConfig = new MotionMagicConfigs()
-      .withMotionMagicAcceleration(500)
-      .withMotionMagicCruiseVelocity(1000)
-      .withMotionMagicJerk(500);
-      public static SoftwareLimitSwitchConfigs RingGearLimits = new SoftwareLimitSwitchConfigs()
+      .withFeedbackRemoteSensorID(17)
+      .withRotorToSensorRatio(36)
+      .withSensorToMechanismRatio(1);
+      public static final MotionMagicConfigs RingGearMotionMagicConfig = new MotionMagicConfigs()
+      .withMotionMagicAcceleration(3500)
+      .withMotionMagicCruiseVelocity(4000)
+      .withMotionMagicJerk(2500);
+      public static final SoftwareLimitSwitchConfigs RingGearLimits = new SoftwareLimitSwitchConfigs()
+      .withForwardSoftLimitThreshold(Rotations.of(.375))
+      .withReverseSoftLimitThreshold(Rotations.of(-.375))
       .withForwardSoftLimitEnable(true)
-      .withReverseSoftLimitEnable(true)
-      .withForwardSoftLimitThreshold(270/360) //270 degrees forwards
-      .withReverseSoftLimitThreshold(5/360); //5 degrees backwards
+      .withReverseSoftLimitEnable(true);
+      public static final MotorOutputConfigs RingGearMotorOutput = new MotorOutputConfigs()
+      .withInverted(InvertedValue.Clockwise_Positive)
+      .withNeutralMode(NeutralModeValue.Brake);
   }
 
   public static class CANdle {

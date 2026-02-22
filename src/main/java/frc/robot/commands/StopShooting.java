@@ -14,7 +14,7 @@ public class StopShooting extends SequentialCommandGroup {
       // new InstantCommand(() -> m_flywheel.v_stopMotors())
         new InstantCommand(() -> m_feeder.v_stopMotor())
           .alongWith(new InstantCommand(() -> m_indexer.v_stopMotor()))
-            .alongWith(new InstantCommand(() -> m_intake.v_stopMotor()))
+            // .alongWith(new InstantCommand(() -> m_intake.v_stopMotor()))
     );
   }
 }

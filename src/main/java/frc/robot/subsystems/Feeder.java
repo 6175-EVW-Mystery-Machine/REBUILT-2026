@@ -15,18 +15,19 @@ public class Feeder extends SubsystemBase {
 
   private final SparkMax m_neo2 = new SparkMax(15, MotorType.kBrushless);
   private final SparkMaxConfig m_config = new SparkMaxConfig();
+  private boolean feeding = false;
 
   public Feeder() {
     m_config
     .smartCurrentLimit(40)
     .inverted(true)
-    .idleMode(IdleMode.kBrake);
+    .idleMode(IdleMode.kCoast);
     m_config.closedLoop
     .pid(0, 0, 0)
-    .feedForward.sva(0, 0.12, 0);
+    .feedForward.sva(0.1, 0.12, 0);
     m_config.closedLoop.maxMotion
-    .cruiseVelocity(100)
-    .maxAcceleration(75);
+    .cruiseVelocity(750)
+    .maxAcceleration(600);
 
     m_neo2.configure(m_config,
     ResetMode.kResetSafeParameters,
@@ -34,11 +35,13 @@ public class Feeder extends SubsystemBase {
   }
 
   public void v_runWheels(double RPM) {
-    m_neo2.getClosedLoopController().setSetpoint(RPM/12, kMAXMotionVelocityControl);
+    m_neo2.getClosedLoopController().setSetpoint(RPM/55.1, kMAXMotionVelocityControl);
+    feeding = true;
   }
 
   public void v_stopMotor() {
     m_neo2.stopMotor();
+    feeding = false;
   }
 
   @Override
@@ -47,5 +50,7 @@ public class Feeder extends SubsystemBase {
     SmartDashboard.putNumber("Feeder Current", Math.round(m_neo2.getOutputCurrent() * 10) / 10);
     SmartDashboard.putNumber("Feeder CAN ID", m_neo2.getDeviceId());
     SmartDashboard.putNumber("Feeder RPM", Math.round(m_neo2.getEncoder().getVelocity() * 10) / 10);
+
+    SmartDashboard.putBoolean("Feeding Fuel?", feeding);
   }
 }
