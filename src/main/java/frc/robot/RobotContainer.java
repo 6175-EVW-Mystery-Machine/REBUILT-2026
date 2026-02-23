@@ -25,10 +25,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.IntakeCommand;
-import frc.robot.commands.ShootFuel;
-import frc.robot.commands.SnowblowFuel;
-import frc.robot.commands.StopShooting;
-import frc.robot.commands.StopTurret;
+import frc.robot.commands.ShootFuelCommand;
+import frc.robot.commands.StopTargeting;
 import frc.robot.commands.TargetTurretCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CTRE_CANdle;
@@ -147,23 +145,22 @@ public class RobotContainer {
         .whileTrue(new IntakeCommand(Intake, CANdle, driverController));
 
         driverController.rightTrigger(0.5)
-        .whileTrue(new ShootFuel(Indexer, Feeder, CANdle, TurretWheel))
-        .onFalse(new StopShooting(TurretWheel, Feeder, Indexer, Intake));
+        .whileTrue(new ShootFuelCommand(TurretWheel, Indexer, Feeder, CANdle, driverController));
 
 
         //TURRET MANUAL CONTROLS
-        driverController.povRight()
-        .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(500)))
-        .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
-        driverController.povLeft()
-        .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(-500)))
-        .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
+        // driverController.povRight()
+        // .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(500)))
+        // .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
+        // driverController.povLeft()
+        // .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(-500)))
+        // .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
 
         driverController.x()
-        .onFalse(new TargetTurretCommand(CANdle, TurretRing, driverController, controller));
+        .onFalse(new TargetTurretCommand(CANdle, TurretRing, driverController));
 
         driverController.b()
-        .onTrue(new StopTurret(TurretRing));
+        .onTrue(new StopTargeting(TurretRing, CANdle));
         
         
     }

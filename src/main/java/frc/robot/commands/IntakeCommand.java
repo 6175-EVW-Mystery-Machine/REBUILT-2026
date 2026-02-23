@@ -29,6 +29,7 @@ public class IntakeCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+    CANdle.v_intakeLights();
     intake.v_runWheels(0.45);
     driverController.setRumble(RumbleType.kLeftRumble, 0.5);
   }
@@ -36,6 +37,7 @@ public class IntakeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
+    CANdle.v_clearIntake();
     intake.v_stopMotor();
     driverController.setRumble(RumbleType.kLeftRumble, 0);
   }

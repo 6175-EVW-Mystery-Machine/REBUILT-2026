@@ -4,9 +4,15 @@ import com.ctre.phoenix6.configs.CANdleConfiguration;
 import com.ctre.phoenix6.controls.ColorFlowAnimation;
 import com.ctre.phoenix6.controls.EmptyAnimation;
 import com.ctre.phoenix6.controls.FireAnimation;
+import com.ctre.phoenix6.controls.LarsonAnimation;
 import com.ctre.phoenix6.controls.RainbowAnimation;
+import com.ctre.phoenix6.controls.SingleFadeAnimation;
+import com.ctre.phoenix6.controls.SolidColor;
 import com.ctre.phoenix6.controls.StrobeAnimation;
 import com.ctre.phoenix6.controls.TwinkleAnimation;
+import com.ctre.phoenix6.signals.AnimationDirectionValue;
+import com.ctre.phoenix6.signals.LarsonBounceValue;
+import com.ctre.phoenix6.signals.RGBWColor;
 import com.ctre.phoenix6.signals.StripTypeValue;
 import com.ctre.phoenix6.hardware.CANdle;
 
@@ -30,18 +36,27 @@ import frc.robot.LimelightHelpers;
 
 public class CTRE_CANdle extends SubsystemBase {
 
-  private CANdle m_CANdle = new CANdle(23, "rio");
+  private CANdle m_CANdle = new CANdle(20, "rio");
   private CANdleConfiguration m_config = new CANdleConfiguration();
 
-
+  /*
+  LeftIntake: 204-230
+  RightIntake: 231-257
+  Indexer: 97-203
+  LeftTurretSupport: 8-53
+  RightTurretSupport: 54-96
+  */
 
   public CTRE_CANdle() {
     m_config.LED.BrightnessScalar = 0.5;
     m_config.LED.StripType = StripTypeValue.GRB;
     m_CANdle.getConfigurator().apply(m_config);
+
+    v_stopAll();
+    v_startAnim();
   }
 
-  private void v_stopAll() {
+  public void v_stopAll() {
     m_CANdle.setControl(new EmptyAnimation(kLeftIntake));
     m_CANdle.setControl(new EmptyAnimation(kRightIntake));
     m_CANdle.setControl(new EmptyAnimation(kIndexer));
@@ -53,45 +68,38 @@ public class CTRE_CANdle extends SubsystemBase {
   }
 
   public void v_startAnim() {
-    v_stopAll();
-    m_CANdle.setControl(new TwinkleAnimation(0, 0).withColor(kYellow).withSlot(kLeftIntake).withFrameRate(60));
-    m_CANdle.setControl(new TwinkleAnimation(0, 0).withColor(kYellow).withSlot(kRightIntake).withFrameRate(60));
-    m_CANdle.setControl(new RainbowAnimation(0, 0).withFrameRate(30).withSlot(kIndexer));
-    m_CANdle.setControl(new TwinkleAnimation(0, 0).withColor(kPurple).withFrameRate(30).withSlot(kLeftTurretSupport));
-    m_CANdle.setControl(new TwinkleAnimation(0, 0).withColor(kPurple).withFrameRate(30).withSlot(kRightTurretSupport));
-    
+    m_CANdle.setControl(new SingleFadeAnimation(8, 53).withColor(kCyan).withSlot(kLeftTurretSupport).withFrameRate(30));
+    m_CANdle.setControl(new SingleFadeAnimation(54, 96).withColor(kCyan).withSlot(kRightTurretSupport).withFrameRate(30));
+      m_CANdle.setControl(new LarsonAnimation(97, 203).withColor(kGreen).withFrameRate(120).withSize(10).withSlot(kIndexer).withBounceMode(LarsonBounceValue.Back));
+        m_CANdle.setControl(new ColorFlowAnimation(204, 230).withSlot(kLeftIntake).withFrameRate(45).withColor(kPurple));
+        m_CANdle.setControl(new ColorFlowAnimation(231, 257).withSlot(kRightIntake).withFrameRate(45).withColor(kPurple));
   }
 
   public void v_intakeLights() {
-    m_CANdle.setControl(new ColorFlowAnimation(0, 0).withColor(kGreen).withSlot(kLeftIntake).withFrameRate(700));
-    m_CANdle.setControl(new ColorFlowAnimation(0, 0).withColor(kGreen).withSlot(kRightIntake).withFrameRate(700));
+    m_CANdle.setControl(new ColorFlowAnimation(204, 230).withColor(kLime).withSlot(kLeftIntake).withFrameRate(240).withDirection(AnimationDirectionValue.Backward));
+    m_CANdle.setControl(new ColorFlowAnimation(231, 257).withColor(kLime).withSlot(kRightIntake).withFrameRate(240).withDirection(AnimationDirectionValue.Backward));
   }
 
   public void v_indexerLights() {
-    m_CANdle.setControl(new ColorFlowAnimation(0, 0).withColor(kOrange).withFrameRate(120).withSlot(kIndexer));
+    m_CANdle.setControl(new ColorFlowAnimation(97, 203).withColor(kBlue).withFrameRate(480).withSlot(kIndexer));
   }
 
   public void v_turretShoot() {
-    v_stopAll();
-    m_CANdle.setControl(new FireAnimation(0, 0).withBrightness(0.5).withSparking(0.2).withCooling(0).withSlot(kLeftTurretSupport));
-    m_CANdle.setControl(new FireAnimation(0, 0).withBrightness(0.5).withSparking(0.2).withCooling(0).withSlot(kRightTurretSupport));
+    m_CANdle.setControl(new FireAnimation(8, 53).withBrightness(1).withSparking(0.15).withCooling(0).withSlot(kLeftTurretSupport).withFrameRate(150).withDirection(AnimationDirectionValue.Backward));
+    m_CANdle.setControl(new FireAnimation(54, 96).withBrightness(1).withSparking(0.15).withCooling(0).withSlot(kRightTurretSupport).withFrameRate(150));
+    v_indexerLights();
   }
 
-  public void v_turretLock() {
-    if (LimelightHelpers.getTV("")) {
-    v_stopAll();
-    m_CANdle.setControl(new StrobeAnimation(0, 0).withColor(kCyan).withFrameRate(20).withSlot(kLeftTurretSupport));
-    m_CANdle.setControl(new StrobeAnimation(0, 0).withColor(kCyan).withFrameRate(20).withSlot(kRightTurretSupport));
-    }
+  public void v_turretAim() {
+    m_CANdle.setControl(new StrobeAnimation(8, 53).withColor(kYellow).withFrameRate(35).withSlot(kLeftTurretSupport));
+    m_CANdle.setControl(new StrobeAnimation(54, 96).withColor(kYellow).withFrameRate(35).withSlot(kRightTurretSupport));
   }
 
   public void v_snowblowTurret() {
     v_stopAll();
-    m_CANdle.setControl(new ColorFlowAnimation(0, 0).withColor(kGreen).withSlot(kLeftIntake).withFrameRate(700));
-    m_CANdle.setControl(new ColorFlowAnimation(0, 0).withColor(kGreen).withSlot(kRightIntake).withFrameRate(700));
-    m_CANdle.setControl(new ColorFlowAnimation(0, 0).withColor(kOrange).withFrameRate(120).withSlot(kIndexer));
-    m_CANdle.setControl(new FireAnimation(0, 0).withBrightness(0.5).withSparking(0.2).withCooling(0).withSlot(kLeftTurretSupport));
-    m_CANdle.setControl(new FireAnimation(0, 0).withBrightness(0.5).withSparking(0.2).withCooling(0).withSlot(kRightTurretSupport));
+    v_intakeLights();
+    v_indexerLights();
+    v_turretShoot();
   }
 
   public void v_clearTurretRails() {

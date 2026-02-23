@@ -38,7 +38,7 @@ public class Indexer extends SubsystemBase {
   }
 
   public void v_runWheels(double RPM) {
-    m_vortex.getClosedLoopController().setSetpoint(RPM/66.2, ControlType.kDutyCycle);
+    m_vortex.getClosedLoopController().setSetpoint(RPM/66.2, ControlType.kMAXMotionVelocityControl);
     indexing = true;
   }
 

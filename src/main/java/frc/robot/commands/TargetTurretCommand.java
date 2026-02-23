@@ -13,13 +13,11 @@ public class TargetTurretCommand extends Command {
   private final CTRE_CANdle CANdle;
   private final TurretRing turretRing;
   private final CommandXboxController driverController;
-  private final XboxController controller;
 
-  public TargetTurretCommand(CTRE_CANdle CANdle, TurretRing turretRing, CommandXboxController driverController, XboxController controller) {
+  public TargetTurretCommand(CTRE_CANdle CANdle, TurretRing turretRing, CommandXboxController driverController) {
     this.turretRing = turretRing;
     this.CANdle = CANdle;
     this.driverController = driverController;
-    this.controller = controller;
     addRequirements(CANdle, turretRing);
   }
 
@@ -31,8 +29,8 @@ public class TargetTurretCommand extends Command {
   @Override
   public void execute() {
       turretRing.v_positionTurret();
-      // CANdle.v_turretLock();
-      if (!turretRing.TargetRumble) {
+      CANdle.v_turretAim();
+      if (turretRing.TargetRumble = false) {
       new ControllerRumble(driverController);
       turretRing.TargetRumble = true;
       }
@@ -41,8 +39,5 @@ public class TargetTurretCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    // CANdle.v_clearTurretRails();
-    turretRing.v_stopMotor();
-    turretRing.TargetRumble = false;
   }
 }
