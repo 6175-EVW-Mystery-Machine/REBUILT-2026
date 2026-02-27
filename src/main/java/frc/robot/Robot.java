@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.TimedRobot;
@@ -11,16 +12,28 @@ import edu.wpi.first.wpilibj.smartdashboard.FieldObject2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.LimelightHelpers.PoseEstimate;
+
+import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static frc.robot.Constants.CANStatus;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  private Pose2d robotPose;
   private Field2d REBUILTField = new Field2d();
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+
+    LimelightHelpers.setCameraPose_RobotSpace("limelight",
+    inchesToMeters(-7),
+    inchesToMeters(-9),
+    inchesToMeters(13.5),
+    0,
+    0,
+    90);
   }
 
   @Override
@@ -37,6 +50,20 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Field", REBUILTField);
     SmartDashboard.putNumber("Match Time", DriverStation.getMatchTime());
     SmartDashboard.putNumber("Battery Voltage", RobotController.getBatteryVoltage());
+
+
+    var driveState = m_robotContainer.drivetrain.getState();
+    double headingDeg = driveState.Pose.getRotation().getDegrees();
+    double angVelocity = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
+
+    robotPose = m_robotContainer.drivetrain.getState().Pose;
+
+
+      PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+
+      if(poseEstimate != null && poseEstimate.tagCount > 0 && angVelocity < 2.0) {
+        m_robotContainer.drivetrain.addVisionMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds);
+    }
   }
 
   @Override

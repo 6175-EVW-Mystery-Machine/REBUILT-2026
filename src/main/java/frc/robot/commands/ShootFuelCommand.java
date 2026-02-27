@@ -29,10 +29,10 @@ public class ShootFuelCommand extends Command {
   @Override
   public void execute() {
     CANdle.v_turretShoot();
-    controller.setRumble(RumbleType.kRightRumble, 0.5);
-    // turretFlywheel.v_runWheel(1000);
-    new WaitCommand(0.1);
-      feeder.v_runWheels(2200);
+    controller.setRumble(RumbleType.kRightRumble, 1);
+    turretFlywheel.v_runWheel(1000);
+    new WaitCommand(0.25);
+      feeder.v_runWheels(4400);
       new WaitCommand(0.1);
         indexer.v_runWheels(1500);
   }
@@ -43,7 +43,7 @@ public class ShootFuelCommand extends Command {
     controller.setRumble(RumbleType.kRightRumble, 0);
     CANdle.v_clearIndexer();
     CANdle.v_clearTurretRails();
-      // turretFlywheel.v_stopMotors();
+      turretFlywheel.v_stopMotors();
         indexer.v_stopMotor();
           feeder.v_stopMotor();
   }

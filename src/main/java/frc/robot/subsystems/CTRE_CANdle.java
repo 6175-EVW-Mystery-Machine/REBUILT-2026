@@ -96,7 +96,6 @@ public class CTRE_CANdle extends SubsystemBase {
   }
 
   public void v_snowblowTurret() {
-    v_stopAll();
     v_intakeLights();
     v_indexerLights();
     v_turretShoot();

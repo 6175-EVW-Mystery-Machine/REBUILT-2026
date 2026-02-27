@@ -33,13 +33,13 @@ public class SnowblowFuelCommand extends Command {
   public void execute() {
     controller.setRumble(RumbleType.kBothRumble, 1);
     CANdle.v_snowblowTurret();
-    // turretFlywheel.v_runWheel(1000);
+    turretFlywheel.v_runWheel(1000);
     new WaitCommand(0.1);
     feeder.v_runWheels(2200);
       new WaitCommand(0.1);
       indexer.v_runWheels(1500);
           new WaitCommand(0.1);
-          intake.v_runWheels(0.45);
+          intake.v_runWheels(0.35);
   }
 
   // Called once the command ends or is interrupted.
@@ -47,7 +47,7 @@ public class SnowblowFuelCommand extends Command {
   public void end(boolean interrupted) {
     controller.setRumble(RumbleType.kBothRumble, 0);
     CANdle.v_stopAll();
-      // turretFlywheel.v_stopMotors();
+      turretFlywheel.v_stopMotors();
         feeder.v_stopMotor();
           indexer.v_stopMotor();
             intake.v_stopMotor();

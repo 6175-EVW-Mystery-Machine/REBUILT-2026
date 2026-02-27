@@ -11,14 +11,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class TurretGearPositioning extends SubsystemBase {
 
   public static double m_robotRelativeAngle;
   public static double m_fieldRelativeAngle;
+  public static Rotation2d m_robotRotation;
 
   public TurretGearPositioning() {
   }
@@ -28,12 +27,13 @@ public class TurretGearPositioning extends SubsystemBase {
       new Translation2d(inchesToMeters(2.75), inchesToMeters(-9)),
       new Rotation2d()));
 
-    double tY = target.getY() - turretPose.getY();
-    double tX = target.getX() - turretPose.getX();
+    double tY = target.getY() - robotPose.getY();
+    double tX = target.getX() - robotPose.getX();
 
     Rotation2d fieldRelativeAngle = Rotation2d.fromRadians(Math.atan2(tY, tX));
     Rotation2d robotRelativeAngle = fieldRelativeAngle.minus(robotPose.getRotation());
 
+    m_robotRotation = fieldRelativeAngle;
     m_robotRelativeAngle = robotRelativeAngle.getDegrees() / 360;
     m_fieldRelativeAngle = fieldRelativeAngle.getDegrees() / 360;
     

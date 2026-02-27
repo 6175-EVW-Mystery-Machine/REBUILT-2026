@@ -8,7 +8,9 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import static com.ctre.phoenix6.signals.MotorAlignmentValue.Opposed;
 
 import static frc.robot.Constants.TurretConstants.FlywheelConfig;
+import static frc.robot.Constants.TurretConstants.FlywheelFeedback;
 import static frc.robot.Constants.TurretConstants.FlywheelMotionMagicConfig;
+import static frc.robot.Constants.TurretConstants.MotionMagicVelocityRequest;
 import static frc.robot.Constants.TurretConstants.FlywheelLeaderID;
 import static frc.robot.Constants.TurretConstants.FlywheelFollowerID;
 import static frc.robot.Constants.TurretConstants.VelocityRequest;
@@ -30,8 +32,9 @@ public class TurretFlywheel extends SubsystemBase {
   private void ConfigureMotors() {
     TalonFXConfiguration m_config = new TalonFXConfiguration()
     .withSlot0(Slot0Configs.from(FlywheelConfig))
-    .withMotionMagic(FlywheelMotionMagicConfig);
-    m_config.TorqueCurrent.TorqueNeutralDeadband = 16;
+    .withMotionMagic(FlywheelMotionMagicConfig)
+    .withFeedback(FlywheelFeedback);
+    // m_config.TorqueCurrent.TorqueNeutralDeadband = 16;
 
     m_flywheel.getConfigurator().apply(m_config);
     m_flywheelFollower.getConfigurator().apply(m_config);
@@ -39,7 +42,7 @@ public class TurretFlywheel extends SubsystemBase {
   }
 
   public void v_runWheel(double RPM) {
-    m_flywheel.setControl(VelocityRequest.withVelocity(RPM/60));
+    m_flywheel.setControl(VelocityRequest.withVelocity(RPM/60).withAcceleration(0.1));
     shooting = true;
   }
 

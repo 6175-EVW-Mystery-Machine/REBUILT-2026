@@ -13,6 +13,7 @@ import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
+import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.RGBWColor;
@@ -52,12 +53,17 @@ public final class Constants{
     public static int FlywheelLeaderID = 18;
     public static int FlywheelFollowerID = 19; 
     public static VelocityVoltage VelocityRequest = new VelocityVoltage(0).withEnableFOC(false);
+    public static MotionMagicVelocityVoltage MotionMagicVelocityRequest = new MotionMagicVelocityVoltage(0).withEnableFOC(false);
       public static final SlotConfigs FlywheelConfig = new SlotConfigs()
-      .withKP(10)
+      .withKP(1)
       .withKD(0)
-      .withKS(0.05)
-      .withKV(0.12)
-      .withKA(0.1);
+      .withKS(0)
+      .withKV(0)
+      .withKA(0);
+      public static final FeedbackConfigs FlywheelFeedback = new FeedbackConfigs()
+      .withFeedbackSensorSource(FeedbackSensorSourceValue.RotorSensor)
+      .withSensorToMechanismRatio(2)
+      .withRotorToSensorRatio(1);
       public static final MotionMagicConfigs FlywheelMotionMagicConfig = new MotionMagicConfigs()
       .withMotionMagicAcceleration(1000)
       .withMotionMagicCruiseVelocity(1500)

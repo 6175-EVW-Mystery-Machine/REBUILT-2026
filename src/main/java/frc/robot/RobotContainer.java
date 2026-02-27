@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import java.time.Instant;
 import java.util.concurrent.TransferQueue;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
@@ -26,6 +27,7 @@ import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootFuelCommand;
+import frc.robot.commands.SnowblowFuelCommand;
 import frc.robot.commands.StopTargeting;
 import frc.robot.commands.TargetTurretCommand;
 import frc.robot.generated.TunerConstants;
@@ -113,6 +115,19 @@ public class RobotContainer {
             )
         );
 
+        driverController.x()
+        .onTrue(drivetrain.applyRequest(() ->
+            drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(TurretGearPositioning.m_robotRelativeAngle * 13))
+        );
+
+        driverController.b()
+        .onTrue(drivetrain.applyRequest(() ->
+            drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(-driverController.getRightX() * MaxAngularRate))
+        );
 
 
         // Idle while the robot is disabled. This ensures the configured
@@ -145,7 +160,7 @@ public class RobotContainer {
         .whileTrue(new IntakeCommand(Intake, CANdle, driverController));
 
         driverController.rightTrigger(0.5)
-        .whileTrue(new ShootFuelCommand(TurretWheel, Indexer, Feeder, CANdle, driverController));
+        .whileTrue(new SnowblowFuelCommand(TurretWheel, Indexer, Feeder, Intake, CANdle, driverController));
 
 
         //TURRET MANUAL CONTROLS
@@ -156,11 +171,14 @@ public class RobotContainer {
         // .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(-500)))
         // .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
 
-        driverController.x()
-        .onFalse(new TargetTurretCommand(CANdle, TurretRing, driverController));
+        // driverController.x()
+        // .onTrue(new TargetTurretCommand(CANdle, TurretRing, driverController));
 
-        driverController.b()
-        .onTrue(new StopTargeting(TurretRing, CANdle));
+        // driverController.b()
+        // .onTrue(new StopTargeting(TurretRing, CANdle));
+
+        driverController.a()
+        .onTrue(new InstantCommand(() -> TurretRing.v_resetEncoder()));
         
         
     }
