@@ -6,12 +6,12 @@ import frc.robot.subsystems.TurretRing;
 
 public class StopTargeting extends InstantCommand {
   private final TurretRing turretRing;
-  private final CTRE_CANdle CANdle;
+  // private final CTRE_CANdle CANdle;
 
-  public StopTargeting(TurretRing turretRing, CTRE_CANdle CANdle) {
+  public StopTargeting(TurretRing turretRing) {
     this.turretRing = turretRing;
-    this.CANdle = CANdle;
-    addRequirements(turretRing, CANdle);
+    // this.CANdle = CANdle;
+    addRequirements(turretRing);
   }
 
   // Called when the command is initially scheduled.
@@ -20,7 +20,7 @@ public class StopTargeting extends InstantCommand {
 
   public void execute() {
     turretRing.v_stopMotor();
-    turretRing.TargetRumble = false;
-    CANdle.v_clearTurretRails();
+    // turretRing.TargetRumble = false;
+    // CANdle.v_clearTurretRails();
   }
 }

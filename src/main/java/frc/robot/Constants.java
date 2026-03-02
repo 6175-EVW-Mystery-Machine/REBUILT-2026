@@ -28,6 +28,7 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 
 import static com.ctre.phoenix6.signals.FeedbackSensorSourceValue.FusedCANcoder;
+import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static edu.wpi.first.units.Units.Rotations;
 
 public final class Constants{
@@ -39,7 +40,7 @@ public final class Constants{
   public static final CANBusStatus CANStatus = new CANBusStatus();
 
 
-  public static final Pose2d hubLocation = new Pose2d(4.035, 3.6449, new Rotation2d());
+  public static final Pose2d hubLocation = new Pose2d(inchesToMeters(182.11), inchesToMeters(158.84), new Rotation2d());
 
   public static class OdometryConstants {
     public static final Matrix<N3, N1> StateSTDDevs = VecBuilder.fill(
@@ -95,7 +96,7 @@ public final class Constants{
       .withMotionMagicJerk(2500);
       public static final SoftwareLimitSwitchConfigs RingGearLimits = new SoftwareLimitSwitchConfigs()
       .withForwardSoftLimitThreshold(Rotations.of(.375))
-      .withReverseSoftLimitThreshold(Rotations.of(-.375))
+      .withReverseSoftLimitThreshold(Rotations.of(-.45))
       .withForwardSoftLimitEnable(true)
       .withReverseSoftLimitEnable(true);
       public static final MotorOutputConfigs RingGearMotorOutput = new MotorOutputConfigs()

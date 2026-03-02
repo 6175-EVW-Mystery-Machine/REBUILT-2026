@@ -33,7 +33,7 @@ public class SnowblowFuelCommand extends Command {
   public void execute() {
     controller.setRumble(RumbleType.kBothRumble, 1);
     CANdle.v_snowblowTurret();
-    turretFlywheel.v_runWheel(1000);
+    turretFlywheel.v_runWheel();
     new WaitCommand(0.1);
     feeder.v_runWheels(2200);
       new WaitCommand(0.1);

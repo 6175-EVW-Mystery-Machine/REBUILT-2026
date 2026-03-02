@@ -45,6 +45,7 @@ public class CTRE_CANdle extends SubsystemBase {
   Indexer: 97-203
   LeftTurretSupport: 8-53
   RightTurretSupport: 54-96
+  CandleLights: 0-7
   */
 
   public CTRE_CANdle() {
@@ -91,14 +92,14 @@ public class CTRE_CANdle extends SubsystemBase {
   }
 
   public void v_turretAim() {
-    m_CANdle.setControl(new StrobeAnimation(8, 53).withColor(kYellow).withFrameRate(35).withSlot(kLeftTurretSupport));
-    m_CANdle.setControl(new StrobeAnimation(54, 96).withColor(kYellow).withFrameRate(35).withSlot(kRightTurretSupport));
+    m_CANdle.setControl(new StrobeAnimation(0, 7).withColor(kYellow).withFrameRate(15).withSlot(5));
   }
 
   public void v_snowblowTurret() {
     v_intakeLights();
     v_indexerLights();
     v_turretShoot();
+    v_turretAim();
   }
 
   public void v_clearTurretRails() {

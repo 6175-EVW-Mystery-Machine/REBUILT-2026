@@ -8,32 +8,39 @@ import frc.robot.subsystems.CTRE_CANdle;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.TurretFlywheel;
+import frc.robot.subsystems.TurretRing;
 
 public class ShootFuelCommand extends Command {
+  private final TurretRing turretRing;
   private final TurretFlywheel turretFlywheel;
   private final Indexer indexer;
   private final Feeder feeder;
   private final CTRE_CANdle CANdle;
   private final CommandXboxController controller;
 
-  public ShootFuelCommand(TurretFlywheel turretFlywheel, Indexer indexer, Feeder feeder, CTRE_CANdle CANdle, CommandXboxController controller) {
+  public ShootFuelCommand(TurretRing turretRing,
+  TurretFlywheel turretFlywheel,
+  Indexer indexer,
+  Feeder feeder,
+  CTRE_CANdle CANdle,
+  CommandXboxController controller) {
+    this.turretRing = turretRing;
     this.turretFlywheel = turretFlywheel;
     this.indexer = indexer;
     this.feeder = feeder;
     this.CANdle = CANdle;
     this.controller = controller;
-    addRequirements(turretFlywheel, indexer, feeder, CANdle);
+    addRequirements(turretRing, turretFlywheel, indexer, feeder, CANdle);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     CANdle.v_turretShoot();
+    turretRing.v_positionTurret();
     controller.setRumble(RumbleType.kRightRumble, 1);
-    turretFlywheel.v_runWheel(1000);
-    new WaitCommand(0.25);
+    turretFlywheel.v_runWheel();
       feeder.v_runWheels(4400);
-      new WaitCommand(0.1);
         indexer.v_runWheels(1500);
   }
 
@@ -43,6 +50,7 @@ public class ShootFuelCommand extends Command {
     controller.setRumble(RumbleType.kRightRumble, 0);
     CANdle.v_clearIndexer();
     CANdle.v_clearTurretRails();
+    turretRing.v_stopMotor();
       turretFlywheel.v_stopMotors();
         indexer.v_stopMotor();
           feeder.v_stopMotor();

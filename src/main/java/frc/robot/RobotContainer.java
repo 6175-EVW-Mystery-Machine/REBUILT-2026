@@ -8,13 +8,16 @@ import static edu.wpi.first.units.Units.*;
 
 import java.time.Instant;
 import java.util.concurrent.TransferQueue;
+import java.util.function.Supplier;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,7 +41,7 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.TurretRing;
 import frc.robot.subsystems.TurretFlywheel;
-import frc.robot.subsystems.TurretGearPositioning;
+import frc.robot.subsystems.TurretMeasurements;
 import frc.robot.Constants.OdometryConstants;
 import frc.robot.Constants.TurretConstants;
 
@@ -51,7 +54,7 @@ public class RobotContainer {
     private final CTRE_CANdle CANdle = new CTRE_CANdle();
     private final TurretRing TurretRing = new TurretRing();
     private final TurretFlywheel TurretWheel = new TurretFlywheel();
-    private final TurretGearPositioning TurretPosition = new TurretGearPositioning();
+    private final TurretMeasurements TurretPosition = new TurretMeasurements();
 
 
     //PRE-GENERATED CTR-E SWERVE DRIVE CODE
@@ -72,14 +75,6 @@ public class RobotContainer {
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
     private final SendableChooser<Command> autoChooser;
-    // TunerConstants.DrivetrainConstants,
-    // 0,
-    // OdometryConstants.StateSTDDevs,
-    // null,
-    // TunerConstants.FrontLeft,
-    // TunerConstants.FrontRight,
-    // TunerConstants.BackLeft,
-    // TunerConstants.BackRight);
 
     public void intakeDriveSpeed() {
         drivetrain.applyRequest(() ->
@@ -90,6 +85,8 @@ public class RobotContainer {
     }
 
     public RobotContainer() {
+
+        NamedCommands.registerCommand("Target & Shoot", new ShootFuelCommand(TurretRing, TurretWheel, Indexer, Feeder, CANdle, driverController));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -115,19 +112,19 @@ public class RobotContainer {
             )
         );
 
-        driverController.x()
-        .onTrue(drivetrain.applyRequest(() ->
-            drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(TurretGearPositioning.m_robotRelativeAngle * 13))
-        );
+        // driverController.x()
+        // .onTrue(drivetrain.applyRequest(() ->
+        //     drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+        //         .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+        //         .withRotationalRate(TurretMeasurements.m_robotRelativeAngle * 13))
+        // );
 
-        driverController.b()
-        .onTrue(drivetrain.applyRequest(() ->
-            drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                .withRotationalRate(-driverController.getRightX() * MaxAngularRate))
-        );
+        // driverController.b()
+        // .onTrue(drivetrain.applyRequest(() ->
+        //     drive.withVelocityX(-driverController.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+        //         .withVelocityY(-driverController.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+        //         .withRotationalRate(-driverController.getRightX() * MaxAngularRate))
+        // );
 
 
         // Idle while the robot is disabled. This ensures the configured
@@ -160,22 +157,22 @@ public class RobotContainer {
         .whileTrue(new IntakeCommand(Intake, CANdle, driverController));
 
         driverController.rightTrigger(0.5)
-        .whileTrue(new SnowblowFuelCommand(TurretWheel, Indexer, Feeder, Intake, CANdle, driverController));
+        .whileTrue(new ShootFuelCommand(TurretRing, TurretWheel, Indexer, Feeder, CANdle, driverController));
 
 
         //TURRET MANUAL CONTROLS
-        // driverController.povRight()
-        // .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(500)))
-        // .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
-        // driverController.povLeft()
-        // .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(-500)))
-        // .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
+        driverController.povRight()
+        .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(500)))
+        .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
+        driverController.povLeft()
+        .whileTrue(new InstantCommand(() -> TurretRing.v_runTurret(-500)))
+        .onFalse(new InstantCommand(() -> TurretRing.v_stopMotor()));
 
         // driverController.x()
-        // .onTrue(new TargetTurretCommand(CANdle, TurretRing, driverController));
+        // .onTrue(new TargetTurretCommand(TurretRing));
 
         // driverController.b()
-        // .onTrue(new StopTargeting(TurretRing, CANdle));
+        // .onTrue(new StopTargeting(TurretRing));
 
         driverController.a()
         .onTrue(new InstantCommand(() -> TurretRing.v_resetEncoder()));

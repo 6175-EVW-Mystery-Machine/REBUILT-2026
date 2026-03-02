@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.LimelightHelpers.PoseEstimate;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
+import static edu.wpi.first.math.util.Units.metersToInches;
 import static frc.robot.Constants.CANStatus;
 
 public class Robot extends TimedRobot {
@@ -27,12 +28,12 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-    LimelightHelpers.setCameraPose_RobotSpace("limelight",
-    inchesToMeters(-7),
-    inchesToMeters(-9),
-    inchesToMeters(13.5),
+    LimelightHelpers.setCameraPose_RobotSpace("limelight-three",
+    inchesToMeters(-10.5),
+    inchesToMeters(-11.5),
+    inchesToMeters(15.5),
     0,
-    0,
+    20,
     90);
   }
 
@@ -44,7 +45,6 @@ public class Robot extends TimedRobot {
     if (busUtil > 0.8) {
       System.out.print("CANBus in heavy use!");
     }
-
     REBUILTField.setRobotPose(m_robotContainer.drivetrain.getState().Pose);
     
     SmartDashboard.putData("Field", REBUILTField);
@@ -59,7 +59,7 @@ public class Robot extends TimedRobot {
     robotPose = m_robotContainer.drivetrain.getState().Pose;
 
 
-      PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+      PoseEstimate poseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-three");
 
       if(poseEstimate != null && poseEstimate.tagCount > 0 && angVelocity < 2.0) {
         m_robotContainer.drivetrain.addVisionMeasurement(poseEstimate.pose, poseEstimate.timestampSeconds);
