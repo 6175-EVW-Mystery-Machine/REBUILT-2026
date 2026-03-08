@@ -82,11 +82,11 @@ public final class Constants{
       .withKV(.12)
       .withKA(0);
       public static final Slot1Configs RingGear1Config = new Slot1Configs()
-      .withKP(50)
+      .withKP(100)
       .withKD(0.4)
-      .withKS(0.1)
-      .withKV(1)
-      .withKA(0.05);
+      .withKS(0.2)
+      .withKV(2)
+      .withKA(0);
       public static final FeedbackConfigs RingGearFeedbackConfig = new FeedbackConfigs()
       .withFeedbackSensorSource(FusedCANcoder)
       .withFeedbackRemoteSensorID(17)

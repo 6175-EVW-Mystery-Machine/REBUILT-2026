@@ -55,7 +55,7 @@ public class TurretFlywheel extends SubsystemBase {
     } else if (distanceToTarget > 100) {
       m_flywheel.setControl(VelocityRequest.withVelocity(MathUtil.interpolate(
         550 / 60,
-        1150 / 60,
+        1250 / 60,
         distanceToTarget / 200)));
     }
 

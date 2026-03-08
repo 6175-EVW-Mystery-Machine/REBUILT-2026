@@ -46,7 +46,7 @@ public class ShootFuelCommand extends Command {
     turretFlywheel.v_runWheel();
       feeder.v_runWheels(4400);
         indexer.v_runWheels(1500);
-          intake.v_runWheels(2400);
+          intake.v_runWheels(2200);
   }
 
   // Called once the command ends or is interrupted.

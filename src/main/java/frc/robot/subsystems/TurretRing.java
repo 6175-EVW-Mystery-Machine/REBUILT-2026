@@ -15,7 +15,7 @@ import static frc.robot.Constants.TurretConstants.RingGearID;
 import static frc.robot.Constants.TurretConstants.RingGearLimits;
 import static frc.robot.Constants.CANIVORE;
 
-import static frc.robot.subsystems.TurretMeasurements.m_robotRelativeAngle;
+import static frc.robot.subsystems.TurretMeasurements.turretAngle;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,7 +44,7 @@ public class TurretRing extends SubsystemBase {
   }
 
   public void v_positionTurret() {
-    m_krakenX44.setControl(PositionRequest.withPosition(m_robotRelativeAngle));
+    m_krakenX44.setControl(PositionRequest.withPosition(turretAngle));
   }
 
   public void v_runTurret(double RPM) {

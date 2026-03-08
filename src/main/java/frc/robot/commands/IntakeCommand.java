@@ -30,7 +30,7 @@ public class IntakeCommand extends Command {
   @Override
   public void execute() {
     CANdle.v_intakeLights();
-    intake.v_runWheels(2400);
+    intake.v_runWheels(1800);
     driverController.setRumble(RumbleType.kLeftRumble, 0.5);
   }
 
