@@ -30,12 +30,18 @@ import static com.ctre.phoenix6.signals.FeedbackSensorSourceValue.RotorSensor;
 import static edu.wpi.first.math.util.Units.inchesToMeters;
 import static edu.wpi.first.units.Units.Rotations;
 
-public final class Constants{
+public final class Constants {
 
   public static final Pose2d blueHubLocation = new Pose2d(inchesToMeters(182.11), inchesToMeters(158.84), new Rotation2d());
   public static final Pose2d redHubLocation = new Pose2d(inchesToMeters(469.11), inchesToMeters(158.85), new Rotation2d());
 
-  public static Pose2d hubLocation = new Pose2d();
+  public static final Pose2d redLeftPassing = new Pose2d(inchesToMeters(560.165), inchesToMeters(79.42), new Rotation2d());
+  public static final Pose2d redRightPassing = new Pose2d(inchesToMeters(560.165), inchesToMeters(238.26), new Rotation2d());
+
+  public static final Pose2d blueLeftPassing = new Pose2d(inchesToMeters(91.055), inchesToMeters(238.26), new Rotation2d());
+  public static final Pose2d blueRightPassing = new Pose2d(inchesToMeters(91.055), inchesToMeters(79.42), new Rotation2d());
+
+  public static Pose2d target = new Pose2d();
 
   private Constants() {
   }

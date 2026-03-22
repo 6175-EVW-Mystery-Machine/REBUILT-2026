@@ -24,8 +24,7 @@ public class TurretFlywheel extends SubsystemBase {
   private final TalonFX m_flywheel = new TalonFX(FlywheelLeaderID, CANIVORE);
   private final TalonFX m_flywheelFollower = new TalonFX(FlywheelFollowerID, CANIVORE);
   private boolean shooting = false;
-  public boolean motorAtSpeed = false;
-  public static double DesiredMotorRPM;
+  public static boolean passing = false;
 
   public TurretFlywheel() {
     ConfigureMotors();
@@ -51,10 +50,10 @@ public class TurretFlywheel extends SubsystemBase {
     } else if (distanceToTarget > 100) {
       m_flywheel.setControl(VelocityRequest.withVelocity(MathUtil.interpolate(
         550 / 60,
-        1300 / 60,
+        1400 / 60,
         distanceToTarget / 220)));
     }
-
+    shooting = true;
   }
 
   public void v_stopMotors() {

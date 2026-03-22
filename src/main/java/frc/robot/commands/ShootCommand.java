@@ -51,8 +51,8 @@ public class ShootCommand extends Command {
     controller.setRumble(RumbleType.kRightRumble, 1);
     turretFlywheel.v_runWheel();
       feeder.v_runWheels(4400);
-        indexer.v_runWheels(1500);
-          intake.v_runWheels(1100);
+        indexer.v_runWheels(2250);
+          intake.v_runWheels(775);
   }
 
   // Called once the command ends or is interrupted.

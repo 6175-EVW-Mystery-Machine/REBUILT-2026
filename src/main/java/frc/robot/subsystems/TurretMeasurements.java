@@ -2,16 +2,13 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.math.util.Units.metersToInches;
 import static edu.wpi.first.units.Units.Inches;
-import static frc.robot.Constants.blueHubLocation;
-import static frc.robot.Constants.hubLocation;
-import static frc.robot.Constants.redHubLocation;
+import static frc.robot.Constants.target;
+import static frc.robot.subsystems.TurretFlywheel.passing;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -20,45 +17,40 @@ public class TurretMeasurements extends SubsystemBase {
   public static double turretAngle;
   public static double m_fieldRelativeAngle;
   public static double distanceToTarget;
+  private Translation2d vRobot;
 
-  private Translation2d robotToTurret = new Translation2d(Inches.of(3.125), Inches.of(-8.375));
+  private Translation2d robotToTurret = new Translation2d(Inches.of(3.033), Inches.of(-8.505));
 
   public TurretMeasurements() {
   }
 
   public void getGearPosition(Pose2d robotPose, ChassisSpeeds robotSpeedSupplier) {
-    
-    //HUB LOCATION CHOOSING
-    if (DriverStation.getAlliance().isEmpty()) {
-      return;
-    }
-      hubLocation = DriverStation.getAlliance().get() == Alliance.Blue ? blueHubLocation : redHubLocation;
-
 
     //ROBOT SPEED READINGS
     var robotSpeeds = robotSpeedSupplier;
-      var vRobot = new Translation2d(robotSpeeds.vxMetersPerSecond, 0).times(5);
+      vRobot = passing == false ? new Translation2d(robotSpeeds.vyMetersPerSecond, -robotSpeeds.vxMetersPerSecond) : 
+      new Translation2d(-robotSpeeds.vyMetersPerSecond, robotSpeeds.vxMetersPerSecond);
 
     //SHOOTER TRANSLATION SETUP
     Translation2d turretPose = robotPose.getTranslation().plus(robotToTurret.rotateBy(robotPose.getRotation()));
 
-      Translation2d predictedTargetTranslation = hubLocation.getTranslation().minus(vRobot);
+      Translation2d predictedTargetTranslation = target.getTranslation().minus(vRobot);
 
-    double tY = hubLocation.getY() - robotPose.getY();
-    double tX = hubLocation.getX() - robotPose.getX();
+    double tY = predictedTargetTranslation.getY() - robotPose.getY();
+    double tX = predictedTargetTranslation.getX() - robotPose.getX();
 
 
     //SETTING SHOOTER TARGET
     Rotation2d fieldRelativeAngle = Rotation2d.fromRadians(Math.atan2(tY, tX));
     Rotation2d robotRelativeAngle = fieldRelativeAngle.minus(robotPose.getRotation());
 
-    turretAngle = (robotRelativeAngle.getDegrees() - vRobot.getX()) / 360;
+    turretAngle = robotRelativeAngle.getDegrees() / 360;
     m_fieldRelativeAngle = fieldRelativeAngle.getDegrees() / 360;
 
     SmartDashboard.putNumber("Shooting Offset X", vRobot.getX());
     SmartDashboard.putNumber("Shooting Offset Y", vRobot.getY());
 
-    distanceToTarget = metersToInches(turretPose.getDistance(hubLocation.getTranslation()));
+    distanceToTarget = metersToInches(turretPose.getDistance(predictedTargetTranslation));
   }
 
   @Override
