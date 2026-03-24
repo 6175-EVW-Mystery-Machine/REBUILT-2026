@@ -24,11 +24,10 @@ public class TurretRing extends SubsystemBase {
 
   private final TalonFX m_krakenX44 = new TalonFX(RingGearID, CANIVORE);
   private final CANcoder m_encoder = new CANcoder(17, CANIVORE);
-  public boolean TargetRumble;
+  public static boolean VaildTurretPosition;
 
   public TurretRing() {
     ConfigureMotor();
-    TargetRumble = false;
   }
 
   private void ConfigureMotor() {
@@ -70,6 +69,8 @@ public class TurretRing extends SubsystemBase {
       SmartDashboard.putNumber("Turret Position", m_krakenX44.getPosition().getValueAsDouble() * 360);
 
       SmartDashboard.putNumber("Turret Encoder Reading", EncoderRead * 100 / 100);
+
+      VaildTurretPosition = (turretAngle * 360) > -163 && (turretAngle * 360) < 136 ? true : false;
   }
 
 }

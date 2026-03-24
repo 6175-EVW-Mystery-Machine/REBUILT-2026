@@ -85,7 +85,13 @@ public class CTRE_CANdle extends SubsystemBase {
   }
 
   public void v_turretAim() {
-    m_CANdle.setControl(new StrobeAnimation(0, 7).withColor(kYellow).withFrameRate(10).withSlot(5));
+    m_CANdle.setControl(new StrobeAnimation(0, 7).withColor(kGreen).withFrameRate(10).withSlot(5));
+  }
+
+  public void v_notTargeted() {
+    m_CANdle.setControl(new StrobeAnimation(0, 7).withColor(kRed).withFrameRate(10).withSlot(5));
+    m_CANdle.setControl(new StrobeAnimation(8, 53).withColor(kRed).withFrameRate(10).withSlot(kLeftTurretSupport));
+    m_CANdle.setControl(new StrobeAnimation(54, 94).withColor(kRed).withFrameRate(10).withSlot(kRightTurretSupport));
   }
 
   public void v_runAll() {

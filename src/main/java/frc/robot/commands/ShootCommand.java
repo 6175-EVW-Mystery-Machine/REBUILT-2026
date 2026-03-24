@@ -1,12 +1,5 @@
 package frc.robot.commands;
 
-import com.ctre.phoenix6.StatusCode;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain;
-import com.ctre.phoenix6.swerve.SwerveModule;
-import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveControlParameters;
-import com.ctre.phoenix6.swerve.SwerveDrivetrain.SwerveDriveState;
-
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -16,6 +9,9 @@ import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.TurretFlywheel;
 import frc.robot.subsystems.TurretRing;
+
+import static frc.robot.subsystems.TurretRing.VaildTurretPosition;
+import static frc.robot.subsystems.TurretFlywheel.ShooterAtSpeed;
 
 public class ShootCommand extends Command {
   private final TurretRing turretRing;
@@ -46,13 +42,19 @@ public class ShootCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
+      turretFlywheel.v_runWheel();
+      turretRing.v_positionTurret();
+        intake.v_runWheels(775);
+    if (ShooterAtSpeed == true && VaildTurretPosition == true) {
     CANdle.v_runAll();
-    turretRing.v_positionTurret();
     controller.setRumble(RumbleType.kRightRumble, 1);
-    turretFlywheel.v_runWheel();
       feeder.v_runWheels(4400);
         indexer.v_runWheels(2250);
-          intake.v_runWheels(775);
+    } else {
+      CANdle.v_notTargeted();
+      feeder.v_stopMotor();
+      indexer.v_stopMotor();
+    }
   }
 
   // Called once the command ends or is interrupted.

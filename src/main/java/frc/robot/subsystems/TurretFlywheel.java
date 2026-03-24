@@ -25,6 +25,8 @@ public class TurretFlywheel extends SubsystemBase {
   private final TalonFX m_flywheelFollower = new TalonFX(FlywheelFollowerID, CANIVORE);
   private boolean shooting = false;
   public static boolean passing = false;
+  public static boolean ShooterAtSpeed;
+  private double PredictedRPM;
 
   public TurretFlywheel() {
     ConfigureMotors();
@@ -47,11 +49,23 @@ public class TurretFlywheel extends SubsystemBase {
         675 / 60,
         1150 / 60,
         distanceToTarget / 220)));
+
+      //RPM CHECK
+      PredictedRPM = MathUtil.interpolate(
+        675 / 60,
+        1150 / 60,
+        distanceToTarget / 220);
     } else if (distanceToTarget > 100) {
       m_flywheel.setControl(VelocityRequest.withVelocity(MathUtil.interpolate(
         550 / 60,
-        1400 / 60,
+        1300 / 60,
         distanceToTarget / 220)));
+
+      //RPM CHECK
+      PredictedRPM = MathUtil.interpolate(
+        550 / 60,
+        1300 / 60,
+        distanceToTarget / 220);
     }
     shooting = true;
   }
@@ -70,5 +84,7 @@ public class TurretFlywheel extends SubsystemBase {
 
       SmartDashboard.putBoolean("Shooting Fuel?", shooting);
       SmartDashboard.putNumber("Target RPM", MathUtil.interpolate(500, 1250, distanceToTarget / 190));
+
+      ShooterAtSpeed = (m_flywheel.getVelocity().getValueAsDouble() * 60) > ((PredictedRPM * 60) * 0.65) ? true : false;
   }
 }
