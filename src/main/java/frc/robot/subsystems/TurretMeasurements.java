@@ -72,10 +72,10 @@ public class TurretMeasurements extends SubsystemBase {
 
     //SHOOTER TRANSLATION SETUP
     Translation2d turretPose = robotPose.getTranslation().plus(robotToTurret.rotateBy(robotPose.getRotation()));
-    // var robotToTurret = turretPose.minus(robotPose.getTranslation());
-    // var vTan = new Translation2d(-omega * robotToTurret.getY(), omega * robotToTurret.getX());
+    var robotToTurret = turretPose.minus(robotPose.getTranslation());
+    var vTan = new Translation2d(-omega * robotToTurret.getY(), omega * robotToTurret.getX());
 
-      Translation2d predictedTargetTranslation = target.getTranslation().minus(vRobot);
+      Translation2d predictedTargetTranslation = target.getTranslation().minus(vRobot.plus(vTan));
 
     double tY = predictedTargetTranslation.getY() - robotPose.getY();
     double tX = predictedTargetTranslation.getX() - robotPose.getX();
