@@ -57,14 +57,14 @@ public class TurretFlywheel extends SubsystemBase {
         distanceToTarget / 220);
     } else if (distanceToTarget > 100) {
       m_flywheel.setControl(VelocityRequest.withVelocity(MathUtil.interpolate(
-        650 / 60,
-        1350 / 60,
+        670 / 60,
+        1400 / 60,
         distanceToTarget / 220)));
 
       //RPM CHECK
       PredictedRPM = MathUtil.interpolate(
-        650 / 60,
-        1350 / 60,
+        670 / 60,
+        1400 / 60,
         distanceToTarget / 220);
     }
     shooting = true;
