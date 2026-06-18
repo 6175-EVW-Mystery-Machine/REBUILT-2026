@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.CTRE_CANdle;
 import frc.robot.subsystems.Feeder;
@@ -8,7 +9,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.TurretFlywheel;
 import frc.robot.subsystems.TurretRing;
 
-public class StopAutoShootCommand extends InstantCommand {
+public class StopAutoShootCommand extends Command {
   private final TurretFlywheel turretFlywheel;
   private final TurretRing turretRing;
   private final CTRE_CANdle CANdle;

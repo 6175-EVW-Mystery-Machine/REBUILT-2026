@@ -1,55 +1,54 @@
 package frc.robot.subsystems;
 
-import com.revrobotics.PersistMode;
-import com.revrobotics.ResetMode;
-import com.revrobotics.spark.SparkMax;
-import static com.revrobotics.spark.SparkBase.ControlType.kMAXMotionVelocityControl;
-import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.spark.config.SparkMaxConfig;
-import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import static frc.robot.Constants.TurretConstants.VelocityRequest;
+import static frc.robot.Constants.ManipulatorCanivore;
+import static frc.robot.Constants.FeederConstants.FeederConfig;
+import static frc.robot.Constants.FeederConstants.FeederCurrentLimits;
+import static frc.robot.Constants.FeederConstants.FeederFeedbackConfig;
+import static frc.robot.Constants.FeederConstants.FeederOutputConfig;
+
+import com.ctre.phoenix6.configs.Slot0Configs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Feeder extends SubsystemBase {
 
-  private final SparkMax m_neo2 = new SparkMax(15, MotorType.kBrushless);
-  private final SparkMaxConfig m_config = new SparkMaxConfig();
+  private final TalonFX m_krakenX44 = new TalonFX(15, ManipulatorCanivore);
   private boolean feeding = false;
 
   public Feeder() {
-    m_config
-    .smartCurrentLimit(80)
-    .inverted(true)
-    .idleMode(IdleMode.kCoast);
-    m_config.closedLoop
-    .pid(0, 0, 0)
-    .feedForward.sva(0.1, 0.12, 0);
-    m_config.closedLoop.maxMotion
-    .cruiseVelocity(750)
-    .maxAcceleration(600);
-
-    m_neo2.configure(m_config,
-    ResetMode.kResetSafeParameters,
-    PersistMode.kPersistParameters);
+    ConfigureMotor();
   }
 
   public void v_runWheels(double RPM) {
-    m_neo2.getClosedLoopController().setSetpoint(RPM/55.1, kMAXMotionVelocityControl);
+    m_krakenX44.setControl(VelocityRequest.withVelocity(RPM / 60));
     feeding = true;
   }
 
   public void v_stopMotor() {
-    m_neo2.stopMotor();
+    m_krakenX44.stopMotor();
     feeding = false;
+  }
+
+  public void ConfigureMotor() {
+    TalonFXConfiguration m_config = new TalonFXConfiguration()
+    .withSlot0(Slot0Configs.from(FeederConfig))
+    .withCurrentLimits(FeederCurrentLimits)
+    .withFeedback(FeederFeedbackConfig)
+    .withMotorOutput(FeederOutputConfig);
+
+    m_krakenX44.getConfigurator().apply(m_config);
   }
 
   @Override
   public void periodic() {
-    SmartDashboard.putNumber("Feeder Temp", m_neo2.getMotorTemperature());
-    SmartDashboard.putNumber("Feeder Current", Math.round(m_neo2.getOutputCurrent() * 10) / 10);
-    SmartDashboard.putNumber("Feeder CAN ID", m_neo2.getDeviceId());
-    SmartDashboard.putNumber("Feeder RPM", Math.round(m_neo2.getEncoder().getVelocity() * 10) / 10);
+    SmartDashboard.putNumber("Feeder Temp", m_krakenX44.getDeviceTemp().getValueAsDouble());
+    SmartDashboard.putNumber("Feeder Current", Math.round(m_krakenX44.getStatorCurrent().getValueAsDouble() * 10) / 10);
+    SmartDashboard.putNumber("Feeder CAN ID", m_krakenX44.getDeviceID());
+    SmartDashboard.putNumber("Feeder RPM", Math.round(m_krakenX44.getRotorVelocity().getValueAsDouble() * 10) / 10 * 60);
 
     SmartDashboard.putBoolean("Feeding Fuel?", feeding);
   }

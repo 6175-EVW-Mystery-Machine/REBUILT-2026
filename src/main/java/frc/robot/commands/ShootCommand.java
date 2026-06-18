@@ -39,13 +39,13 @@ public class ShootCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-        intake.v_runWheels(775);
+        intake.v_runWheels(900);
     if (VaildTurretPosition == true) {
       turretFlywheel.v_runWheel();
       turretRing.v_positionTurret();
     if (ShooterAtSpeed == true) {
     CANdle.v_runAll();
-      feeder.v_runWheels(4400);
+      feeder.v_runWheels(2200);
         indexer.v_runWheels(2250);
     } else {
       CANdle.v_notTargeted();

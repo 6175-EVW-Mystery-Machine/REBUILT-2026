@@ -128,6 +128,26 @@ public final class Constants {
       .withStatorCurrentLimit(80);
   }
 
+  public static class FeederConstants {
+    public static int FeederID = 15;
+    public static final SlotConfigs FeederConfig = new SlotConfigs()
+    .withKP(0.8)
+    .withKD(0)
+    .withKS(0)
+    .withKV(0.2)
+    .withKA(0);
+    public static final FeedbackConfigs FeederFeedbackConfig = new FeedbackConfigs()
+    .withFeedbackSensorSource(RotorSensor)
+    .withRotorToSensorRatio(1)
+    .withSensorToMechanismRatio(2);
+    public static final MotorOutputConfigs FeederOutputConfig = new MotorOutputConfigs()
+    .withInverted(Clockwise_Positive)
+    .withNeutralMode(Coast);
+    public static final CurrentLimitsConfigs FeederCurrentLimits = new CurrentLimitsConfigs()
+    .withSupplyCurrentLimit(60)
+    .withStatorCurrentLimit(80);
+  }
+
   public static class CANdle {
       //SLOTS
       public static int kRightIntake = 0;

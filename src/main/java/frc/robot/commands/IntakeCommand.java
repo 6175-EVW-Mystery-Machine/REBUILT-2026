@@ -20,7 +20,7 @@ public class IntakeCommand extends Command {
   @Override
   public void execute() {
     CANdle.v_intakeLights();
-    intake.v_runWheels(775);
+    intake.v_runWheels(900);
   }
 
   // Called once the command ends or is interrupted.

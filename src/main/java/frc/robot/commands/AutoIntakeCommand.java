@@ -1,10 +1,11 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.subsystems.CTRE_CANdle;
 import frc.robot.subsystems.Intake;
 
-public class AutoIntakeCommand extends InstantCommand {
+public class AutoIntakeCommand extends Command {
   private final Intake intake;
   private final CTRE_CANdle CANdle;
   

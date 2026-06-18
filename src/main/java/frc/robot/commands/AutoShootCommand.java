@@ -1,6 +1,8 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import frc.robot.subsystems.CTRE_CANdle;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Indexer;
@@ -8,7 +10,7 @@ import frc.robot.subsystems.Intake;
 import frc.robot.subsystems.TurretFlywheel;
 import frc.robot.subsystems.TurretRing;
 
-public class AutoShootCommand extends InstantCommand {
+public class AutoShootCommand extends Command {
   private final TurretFlywheel turretFlywheel;
   private final TurretRing turretRing;
   private final CTRE_CANdle CANdle;
@@ -32,7 +34,7 @@ public class AutoShootCommand extends InstantCommand {
     turretFlywheel.v_runWheel();
     turretRing.v_positionTurret();
     CANdle.v_runAll();
-      feeder.v_runWheels(4400);
+      feeder.v_runWheels(2200);
         indexer.v_runWheels(2250);
 }
 }
