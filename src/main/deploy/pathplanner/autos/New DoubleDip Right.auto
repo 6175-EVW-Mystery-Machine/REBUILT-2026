@@ -1,0 +1,67 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "NEW DoubleDipRight 1"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot RightSide"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Target & Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "NEW DoubleDipRight 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot RightSide"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 3.0
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Stop Target & Shoot"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "NEW DoubleDipRight 3"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

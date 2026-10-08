@@ -28,7 +28,7 @@ public class TurretMeasurements extends SubsystemBase {
   public static double distanceToTarget;
   private Translation2d vRobot;
 
-  private Translation2d robotToTurret = new Translation2d(Inches.of(-8.505), Inches.of(3.033));
+  private Translation2d robotToTurret = new Translation2d(Inches.of(-8.375), Inches.of(3.033));
 
   public TurretMeasurements() {
   }

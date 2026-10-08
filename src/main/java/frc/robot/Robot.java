@@ -11,7 +11,6 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.LimelightHelpers.PoseEstimate;
 
 import static edu.wpi.first.math.util.Units.inchesToMeters;
-import static edu.wpi.first.math.util.Units.metersToInches;
 import static frc.robot.Constants.CANStatus;
 
 import com.revrobotics.util.StatusLogger;
@@ -24,22 +23,22 @@ public class Robot extends TimedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
 
-    LimelightHelpers.setCameraPose_RobotSpace("limelight-left",
-    inchesToMeters(-8.75),
-    inchesToMeters(-11.375),
-    inchesToMeters(15.25),
-    0,
-    20,
-    90);
-    LimelightHelpers.setCameraPose_RobotSpace("limelight-front",
-    inchesToMeters(12.75),
-    inchesToMeters(10.5),
-    inchesToMeters(13.5),
-    0,
-    0,
-    0);
-    LimelightHelpers.SetIMUMode("limelight-left", 0); 
-    LimelightHelpers.SetIMUMode("limelight-front", 0); 
+    // LimelightHelpers.setCameraPose_RobotSpace("limelight-left",
+    // -0.22225,
+    // -0.288925,
+    // 0.38735,
+    // 0,
+    // 20,
+    // 90);
+    // LimelightHelpers.setCameraPose_RobotSpace("limelight-front",
+    // 0.32385,
+    // 0.2667,
+    // 0.3429,
+    // 0,
+    // 0,
+    // 0);
+    // LimelightHelpers.SetIMUMode("limelight-left", 0); 
+    // LimelightHelpers.SetIMUMode("limelight-front", 0); 
   }
 
   @Override
@@ -64,10 +63,7 @@ public class Robot extends TimedRobot {
 
 
     var driveState = m_robotContainer.drivetrain.getState();
-    double headingDeg = driveState.Pose.getRotation().getDegrees();
     double angVelocity = Units.radiansToRotations(driveState.Speeds.omegaRadiansPerSecond);
-
-    var robotPose = m_robotContainer.drivetrain.getState().Pose;
 
 
       PoseEstimate leftPoseEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-left");
@@ -79,7 +75,7 @@ public class Robot extends TimedRobot {
     }
       if (frontPoseEstimate != null && frontPoseEstimate.tagCount > 0 && angVelocity < 2.0 && frontPoseEstimate.avgTagDist < 3.5) {
         m_robotContainer.drivetrain.addVisionMeasurement(frontPoseEstimate.pose, frontPoseEstimate.timestampSeconds);
-      } 
+    } 
   }
 
   @Override

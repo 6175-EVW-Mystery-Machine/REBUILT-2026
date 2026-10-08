@@ -2,11 +2,15 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import javax.tools.JavaFileManager.Location;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.FollowPathCommand;
+import com.pathplanner.lib.commands.PathPlannerAuto;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -22,10 +26,13 @@ import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.RobotModeTriggers;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.commands.AutoFlywheelWarmup;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.AutoShootCommand;
 import frc.robot.commands.IntakeCommand;
 import frc.robot.commands.ShootCommand;
+import frc.robot.commands.ShootLeftSide;
+import frc.robot.commands.ShootRightSide;
 import frc.robot.commands.StopAutoIntakeCommand;
 import frc.robot.commands.StopAutoShootCommand;
 import frc.robot.commands.UnJamCommand;
@@ -36,6 +43,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.Feeder;
 import frc.robot.subsystems.Indexer;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Localization;
 import frc.robot.subsystems.TurretRing;
 import frc.robot.subsystems.TurretFlywheel;
 import frc.robot.subsystems.TurretMeasurements;
@@ -50,6 +58,7 @@ public class RobotContainer {
     private final TurretRing TurretRing = new TurretRing();
     private final TurretFlywheel TurretWheel = new TurretFlywheel();
     private final TurretMeasurements TurretMeasurements = new TurretMeasurements();
+    private final Localization Localization = new Localization();
 
 
     //PRE-GENERATED CTR-E SWERVE DRIVE CODE
@@ -76,6 +85,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("Stop Target & Shoot", new StopAutoShootCommand(TurretWheel, TurretRing, CANdle, Indexer, Feeder, Intake));
         NamedCommands.registerCommand("Intake", new AutoIntakeCommand(Intake, CANdle));
         NamedCommands.registerCommand("Stop Intake", new StopAutoIntakeCommand(Intake, CANdle));
+        NamedCommands.registerCommand("Warmup Flywheel", new AutoFlywheelWarmup(TurretWheel));
+        NamedCommands.registerCommand("Shoot LeftSide", new ShootLeftSide(TurretWheel, TurretRing, CANdle, Indexer, Feeder, Intake));
+        NamedCommands.registerCommand("Shoot RightSide", new ShootRightSide(TurretWheel, TurretRing, CANdle, Indexer, Feeder, Intake));
         autoChooser = AutoBuilder.buildAutoChooser();
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
@@ -144,6 +156,12 @@ public class RobotContainer {
 
         driverController.y()
         .whileTrue(new UnJamCommand(Indexer, CANdle));
+
+        driverController.x()
+        .onTrue(new RunCommand(() -> Localization.v_setLimelightPipeline(0), Localization));
+
+        driverController.b()
+        .onTrue(new RunCommand(() -> Localization.v_setLimelightPipeline(2), Localization));
     }
 
     public Command getAutonomousCommand() {

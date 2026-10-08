@@ -48,6 +48,14 @@ public class TurretRing extends SubsystemBase {
     m_krakenX44.setControl(PositionRequest.withPosition(turretAngle));
   }
 
+  public void v_rightTrenchSetShot() {
+    m_krakenX44.setControl(PositionRequest.withPosition(0.2638));
+  }
+
+  public void v_leftTrenchSetShot() {
+    m_krakenX44.setControl(PositionRequest.withPosition(-0.225));
+  }
+
   public void v_runTurret(double RPM) {
     m_krakenX44.setControl(VelocityRequest.withVelocity(RPM/360));
   }

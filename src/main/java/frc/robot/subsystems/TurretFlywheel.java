@@ -45,6 +45,10 @@ public class TurretFlywheel extends SubsystemBase {
     m_flywheelFollower.setControl(new Follower(FlywheelLeaderID, Opposed));
   }
 
+  public void v_trenchSetShot() {
+    m_flywheel.setControl(VelocityRequest.withVelocity(18));
+  }
+
   public void v_runWheel() {
     if (distanceToTarget < 100) {
       m_flywheel.setControl(VelocityRequest.withVelocity(MathUtil.interpolate(
@@ -59,14 +63,14 @@ public class TurretFlywheel extends SubsystemBase {
         distanceToTarget / 220);
     } else if (distanceToTarget > 100) {
       m_flywheel.setControl(VelocityRequest.withVelocity(MathUtil.interpolate(
-        670 / 60,
-        1350 / 60,
+        650 / 60,
+        1300 / 60,
         distanceToTarget / 220)));
 
       //RPM CHECK
       PredictedRPM = MathUtil.interpolate(
-        670 / 60,
-        1350 / 60,
+        650 / 60,
+        1300 / 60,
         distanceToTarget / 220);
     }
     shooting = true;
